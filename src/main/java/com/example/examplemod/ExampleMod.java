@@ -4,6 +4,7 @@ import com.mojang.logging.LogUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
+import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.*;
 import net.minecraft.world.level.block.Block;
@@ -75,8 +76,17 @@ public class ExampleMod {
   public void onBlockClicked(PlayerInteractEvent.LeftClickBlock event) {
     var player = event.getEntity();
     var inventory = player.getInventory();
-    if (inventory.isEmpty()) {
-      player.setItemInHand(InteractionHand.MAIN_HAND, new ItemStack(Items.DIAMOND_AXE, 1));
+
+    var hitBlockItem = event.getLevel().getBlockState(event.getPos()).getBlock().asItem();
+
+    if (inventory.isEmpty() && hitBlockItem == Items.GRASS_BLOCK) {
+      player.sendSystemMessage(Component.literal("Congratulations!"));
+
+      player.setItemInHand(InteractionHand.MAIN_HAND, new ItemStack(Items.DIAMOND_SWORD, 1));
+      player.setItemSlot(EquipmentSlot.HEAD, new ItemStack(Items.DIAMOND_HELMET, 1));
+      player.setItemSlot(EquipmentSlot.CHEST, new ItemStack(Items.DIAMOND_CHESTPLATE, 1));
+      player.setItemSlot(EquipmentSlot.LEGS, new ItemStack(Items.DIAMOND_LEGGINGS, 1));
+      player.setItemSlot(EquipmentSlot.FEET, new ItemStack(Items.DIAMOND_BOOTS, 1));
     }
 
   }
