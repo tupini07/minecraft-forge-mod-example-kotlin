@@ -1,6 +1,5 @@
-package com.example.examplemod.listeners
+package com.example.examplemod.listeners.server
 
-import com.example.examplemod.commands.client.SayHiCommand
 import com.example.examplemod.extensions.sendStringMessage
 import com.mojang.logging.LogUtils
 import net.minecraft.network.chat.Component
@@ -9,14 +8,17 @@ import net.minecraft.world.entity.EquipmentSlot
 import net.minecraft.world.entity.player.Player
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.item.Items
-import net.minecraftforge.client.event.RegisterClientCommandsEvent
 import net.minecraftforge.event.RegisterCommandsEvent
 import net.minecraftforge.event.entity.player.PlayerEvent
 import net.minecraftforge.event.entity.player.PlayerInteractEvent
 import net.minecraftforge.event.server.ServerStartingEvent
 import net.minecraftforge.eventbus.api.SubscribeEvent
 
-class MinecraftEventListeners {
+/**
+ * Listens for events that happen on the server.
+ */
+class ServerEventListener {
+
     // You can use SubscribeEvent and let the Event Bus discover methods to call
     @SubscribeEvent
     fun onServerStarting(event: ServerStartingEvent?) {
@@ -26,18 +28,12 @@ class MinecraftEventListeners {
 
     /**
      * Used to register new "command classes". NOTE: This is only used to register commands
-     * ON THE SERVER! Use `RegisterClientCommandsEvent` listener for client-side commands.
+     * ON THE SERVER! Use [com.example.examplemod.listeners.client.ClientEventListener.onRegisterClientSideCommands]
+     * listener for client-side commands.
      */
     @SubscribeEvent
     fun onRegisterServerSideCommands(event: RegisterCommandsEvent) {
         val dispatcher = event.dispatcher
-    }
-
-    @SubscribeEvent
-    fun onRegisterClientSideCommands(event: RegisterClientCommandsEvent) {
-        val clientSideDispatcher = event.dispatcher
-
-        SayHiCommand.register(clientSideDispatcher)
     }
 
     @SubscribeEvent

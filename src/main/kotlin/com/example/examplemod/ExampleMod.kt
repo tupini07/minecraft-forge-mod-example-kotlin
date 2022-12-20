@@ -1,7 +1,8 @@
 package com.example.examplemod
 
-import com.example.examplemod.listeners.MinecraftEventListeners
 import com.example.examplemod.listeners.ForgeEventListeners
+import com.example.examplemod.listeners.client.ClientEventListener
+import com.example.examplemod.listeners.server.ServerEventListener
 import com.mojang.logging.LogUtils
 import net.minecraft.client.Minecraft
 import net.minecraft.world.item.BlockItem
@@ -39,7 +40,8 @@ class ExampleMod {
         modEventBus.register(ForgeEventListeners())
 
         // Register event listener classes
-        MinecraftForge.EVENT_BUS.register(MinecraftEventListeners())
+        MinecraftForge.EVENT_BUS.register(ServerEventListener())
+        MinecraftForge.EVENT_BUS.register(ClientEventListener())
     }
 
     private fun commonSetup(event: FMLCommonSetupEvent) {
