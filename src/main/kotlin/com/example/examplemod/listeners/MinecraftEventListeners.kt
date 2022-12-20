@@ -1,5 +1,6 @@
 package com.example.examplemod.listeners
 
+import com.example.examplemod.commands.client.SayHiCommand
 import com.example.examplemod.extensions.sendStringMessage
 import com.mojang.logging.LogUtils
 import net.minecraft.network.chat.Component
@@ -8,17 +9,41 @@ import net.minecraft.world.entity.EquipmentSlot
 import net.minecraft.world.entity.player.Player
 import net.minecraft.world.item.ItemStack
 import net.minecraft.world.item.Items
+import net.minecraftforge.client.event.RegisterClientCommandsEvent
+import net.minecraftforge.event.RegisterCommandsEvent
 import net.minecraftforge.event.entity.player.PlayerEvent
 import net.minecraftforge.event.entity.player.PlayerInteractEvent
 import net.minecraftforge.event.server.ServerStartingEvent
 import net.minecraftforge.eventbus.api.SubscribeEvent
 
-class ExampleListeners {
+class MinecraftEventListeners {
     // You can use SubscribeEvent and let the Event Bus discover methods to call
     @SubscribeEvent
     fun onServerStarting(event: ServerStartingEvent?) {
         // Do something when the server starts
         LOGGER.info("HELLO from server starting")
+    }
+
+    /**
+     * Used to register new "command classes". NOTE: This is only used to register commands
+     * ON THE SERVER! Use `RegisterClientCommandsEvent` listener for client-side commands.
+     */
+    @SubscribeEvent
+    fun onRegisterServerSideCommands(event: RegisterCommandsEvent) {
+        val dispatcher = event.dispatcher
+    }
+
+    @SubscribeEvent
+    fun onRegisterClientSideCommands(event: RegisterClientCommandsEvent) {
+        val clientSideDispatcher = event.dispatcher
+
+        SayHiCommand.register(clientSideDispatcher)
+    }
+
+    @SubscribeEvent
+    fun onPlayerLoggedIn(event: PlayerEvent.PlayerLoggedInEvent) {
+        val player = event.entity as Player
+        player.sendStringMessage("AAAAAAAAA!")
     }
 
     @SubscribeEvent
@@ -47,12 +72,6 @@ class ExampleListeners {
             player.setItemSlot(EquipmentSlot.LEGS, ItemStack(Items.DIAMOND_LEGGINGS, 1))
             player.setItemSlot(EquipmentSlot.FEET, ItemStack(Items.DIAMOND_BOOTS, 1))
         }
-    }
-
-    @SubscribeEvent
-    fun onPlayerLoggedIn(event: PlayerEvent.PlayerLoggedInEvent) {
-        val player = event.entity as Player
-        player.sendSystemMessage(Component.literal("AAAAAAAAA!"))
     }
 
     companion object {

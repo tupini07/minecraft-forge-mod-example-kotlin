@@ -1,6 +1,7 @@
 package com.example.examplemod
 
-import com.example.examplemod.listeners.ExampleListeners
+import com.example.examplemod.listeners.MinecraftEventListeners
+import com.example.examplemod.listeners.ForgeEventListeners
 import com.mojang.logging.LogUtils
 import net.minecraft.client.Minecraft
 import net.minecraft.world.item.BlockItem
@@ -35,8 +36,10 @@ class ExampleMod {
         // Register the Deferred Register to the mod event bus so items get registered
         ITEMS.register(modEventBus)
 
-        // Register ourselves for server and other game events we are interested in
-        MinecraftForge.EVENT_BUS.register(ExampleListeners())
+        modEventBus.register(ForgeEventListeners())
+
+        // Register event listener classes
+        MinecraftForge.EVENT_BUS.register(MinecraftEventListeners())
     }
 
     private fun commonSetup(event: FMLCommonSetupEvent) {
