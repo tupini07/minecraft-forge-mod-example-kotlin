@@ -1,22 +1,17 @@
 package com.example.examplemod
 
-import com.example.examplemod.ExampleMod
+import com.example.examplemod.listeners.ExampleListeners
 import com.mojang.logging.LogUtils
 import net.minecraft.client.Minecraft
-import net.minecraft.network.chat.Component
-import net.minecraft.world.InteractionHand
-import net.minecraft.world.entity.EquipmentSlot
-import net.minecraft.world.entity.player.Player
-import net.minecraft.world.item.*
+import net.minecraft.world.item.BlockItem
+import net.minecraft.world.item.CreativeModeTab
+import net.minecraft.world.item.Item
 import net.minecraft.world.level.block.Block
 import net.minecraft.world.level.block.Blocks
 import net.minecraft.world.level.block.state.BlockBehaviour
 import net.minecraft.world.level.material.Material
 import net.minecraftforge.api.distmarker.Dist
 import net.minecraftforge.common.MinecraftForge
-import net.minecraftforge.event.entity.player.PlayerEvent.PlayerLoggedInEvent
-import net.minecraftforge.event.entity.player.PlayerInteractEvent.LeftClickBlock
-import net.minecraftforge.event.server.ServerStartingEvent
 import net.minecraftforge.eventbus.api.SubscribeEvent
 import net.minecraftforge.fml.common.Mod
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber
@@ -41,41 +36,13 @@ class ExampleMod {
         ITEMS.register(modEventBus)
 
         // Register ourselves for server and other game events we are interested in
-        MinecraftForge.EVENT_BUS.register(this)
+        MinecraftForge.EVENT_BUS.register(ExampleListeners())
     }
 
     private fun commonSetup(event: FMLCommonSetupEvent) {
         // Some common setup code
         LOGGER.info("HELLO FROM COMMON SETUP")
         LOGGER.info("DIRT BLOCK >> {}", ForgeRegistries.BLOCKS.getKey(Blocks.DIRT))
-    }
-
-    // You can use SubscribeEvent and let the Event Bus discover methods to call
-    @SubscribeEvent
-    fun onServerStarting(event: ServerStartingEvent?) {
-        // Do something when the server starts
-        LOGGER.info("HELLO from server starting")
-    }
-
-    @SubscribeEvent
-    fun onBlockClicked(event: LeftClickBlock) {
-        val player = event.entity
-        val inventory = player.inventory
-        val hitBlockItem = event.level.getBlockState(event.pos).block.asItem()
-        if (inventory.isEmpty && hitBlockItem === Items.GRASS_BLOCK) {
-            player.sendSystemMessage(Component.literal("Congratulations!"))
-            player.setItemInHand(InteractionHand.MAIN_HAND, ItemStack(Items.DIAMOND_SWORD, 1))
-            player.setItemSlot(EquipmentSlot.HEAD, ItemStack(Items.DIAMOND_HELMET, 1))
-            player.setItemSlot(EquipmentSlot.CHEST, ItemStack(Items.DIAMOND_CHESTPLATE, 1))
-            player.setItemSlot(EquipmentSlot.LEGS, ItemStack(Items.DIAMOND_LEGGINGS, 1))
-            player.setItemSlot(EquipmentSlot.FEET, ItemStack(Items.DIAMOND_BOOTS, 1))
-        }
-    }
-
-    @SubscribeEvent
-    fun onPlayerLoggedIn(event: PlayerLoggedInEvent) {
-        val player = event.entity as Player
-        player.sendSystemMessage(Component.literal("AAAAAAAAA!"))
     }
 
     // You can use EventBusSubscriber to automatically register all static methods in the class annotated with @SubscribeEvent
