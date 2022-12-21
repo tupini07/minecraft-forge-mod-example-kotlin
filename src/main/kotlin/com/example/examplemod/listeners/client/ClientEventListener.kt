@@ -2,7 +2,7 @@ package com.example.examplemod.listeners.client
 
 import com.example.examplemod.commands.client.SayHiCommand
 import com.example.examplemod.extensions.sendStringMessage
-import com.example.examplemod.listeners.ClientInboundHandler
+import com.example.examplemod.handlers.ClientInboundHandler
 import com.mojang.logging.LogUtils
 import net.minecraft.ChatFormatting
 import net.minecraft.client.Minecraft
@@ -58,7 +58,16 @@ class ClientEventListener {
 //        encoder
 //        packet_handler
 //        DefaultChannelPipeline$TailContext#0
-        pipeline.addBefore("packet_handler", "custom_packet_handler", ClientInboundHandler())
+//        pipeline.addBefore("packet_handler", "custom_packet_handler", ClientInboundHandler())
+
+        pipeline.addBefore("timeout", "1_custom_packet_handler", ClientInboundHandler("1_before_timeout"))
+        pipeline.addBefore("splitter", "2_custom_packet_handler", ClientInboundHandler("2_before_splitter"))
+        pipeline.addBefore("decompress", "3_custom_packet_handler", ClientInboundHandler("3_before_decompress"))
+        pipeline.addBefore("decoder", "4_custom_packet_handler", ClientInboundHandler("4_before_decoder"))
+        pipeline.addBefore("prepender", "5_custom_packet_handler", ClientInboundHandler("5_before_prepender"))
+        pipeline.addBefore("compress", "6_custom_packet_handler", ClientInboundHandler("6_before_compress"))
+        pipeline.addBefore("encoder", "7_custom_packet_handler", ClientInboundHandler("7_before_encoder"))
+        pipeline.addBefore("packet_handler", "8_custom_packet_handler", ClientInboundHandler("8_before_packet_handler"))
     }
 
     companion object {
