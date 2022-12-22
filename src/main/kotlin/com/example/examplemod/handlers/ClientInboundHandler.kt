@@ -38,6 +38,7 @@ class ClientInboundHandler(name: String) : SimpleChannelInboundHandler<Any>(fals
 
     override fun channelRead0(ctx: ChannelHandlerContext?, msg: Any?) {
         // TODO: How do we know which `tick` number the current event happened in?
+        //  ^ Consider that this code here runs on the network thread
 
         if (msg is ByteBuf) {
             val byteBuffer: ByteBuffer = msg.copyToByteBufferSafe()
